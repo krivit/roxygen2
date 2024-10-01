@@ -12,9 +12,9 @@
 #' MARKDOWN           LINK TEXT  CODE RD
 #' --------           ---------  ---- --
 #' [fun()]            fun()       T   \\link[=fun]{fun()} or
-#'                                    \\link[pkg:file]{pkg::fun()}
+#'                                    \\link[pkg:file]{fun()}
 #' [obj]              obj         F   \\link{obj} or
-#'                                    \\link[pkg:file]{pkg::obj}
+#'                                    \\link[pkg:file]{obj}
 #' [pkg::fun()]       pkg::fun()  T   \\link[pkg:file]{pkg::fun()}
 #' [pkg::obj]         pkg::obj    F   \\link[pkg:file]{pkg::obj}
 #' [text][fun()]      text        F   \\link[=fun]{text} or
@@ -147,7 +147,7 @@ parse_link <- function(destination, contents, state) {
   s4 <- str_detect(destination, "-class$")
   noclass <- str_match(fun, "^(.*)-class$")[1,2]
 
-  if (is.na(pkg)) pkg <- resolve_link_package(obj, thispkg, state = state)
+  if (resolved <- is.na(pkg)) pkg <- resolve_link_package(obj, thispkg, state = state)
   if (!is.na(pkg) && pkg == thispkg) pkg <- NA_character_
   file <- find_topic_filename(pkg, obj, state$tag)
 
@@ -161,7 +161,7 @@ parse_link <- function(destination, contents, state) {
       if (! is.na(pkg)) paste0(pkg, ":"),
       if (is_fun || ! is.na(pkg)) paste0(if (is.na(pkg)) obj else file, "]"),
       "{",
-      if (!is.na(pkg)) paste0(pkg, "::"),
+      if (!is.na(pkg) && !resolved) paste0(pkg, "::"),
       if (s4) noclass else fun,
       "}",
       if (is_code) "}" else ""
