@@ -186,6 +186,8 @@ parse_link <- function(destination, contents, state) {
 }
 
 resolve_link_package <- function(topic, me = NULL, pkgdir = NULL, state = NULL) {
+  topic <- gsub("\\\\%", "%", topic)
+
   me <- me %||% roxy_meta_get("current_package")
   # this is  from the roxygen2 tests, should not happen on a real package
   if (is.null(me) || is.na(me) || me == "") return(NA_character_)
