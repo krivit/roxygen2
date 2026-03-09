@@ -5,6 +5,7 @@
 Datasets are stored in `data/`, not as regular R objects in the package.
 This means you need to document them in a slightly different way:
 instead of documenting the data directly, you quote the dataset’s name.
+For example, this is the roxygen2 block used for `ggplot2::diamonds`:
 
 ``` r
 #' Prices of over 50,000 round cut diamonds
@@ -28,7 +29,14 @@ instead of documenting the data directly, you quote the dataset’s name.
 #' }
 #' 
 #' @source {ggplot2} tidyverse R package.
+"diamonds"
+#> [1] "diamonds"
 ```
+
+Note that the default usage assumes that you use `LazyData: true` in
+your `DESCRIPTION`; this is the recommended (modern) style of exposing
+datasets and doesn’t require an explicit
+[`data()`](https://rdrr.io/r/utils/data.html) call.
 
 Note the use of two additional tags that are particularly useful for
 documenting data:
